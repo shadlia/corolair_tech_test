@@ -13,7 +13,6 @@ This is my attempt to solve the technical test for Corolair. I have implemented 
 7. [Usage Examples](#usage-examples)
 8. [Testing & Documentation](#testing-and-documentation)
 9. [Security Considerations](#security-considerations)
-10. [Acknowledgments](#acknowledgments)
 
 ---
 
@@ -28,15 +27,15 @@ The API allows users to upload PDFs, create a knowledge graph, and retrieve info
   - OpenAI API for LLM responses and embeddings
 - **Libraries/Tools**:
   - LanceDB, Langchain(i had issues with Docling to handle Pdfs so i used langchain loader), FastAPI ....
-  - Optionally: Swagger for API documentation
+  - Swagger for API documentation
 
 ## Installation
 
 1. **Clone the repository**:
 
    ```bash
-   git clone <repository-url>
-   cd <repository-folder>
+   git clone https://github.com/shadlia/corolair_tech_test
+   cd shadlia/corolair_tech_test
    ```
 
 2. **Install dependencies**:
@@ -115,20 +114,34 @@ The API provides knowledge retrieval and answering services by processing and em
 ```bash
 # Upload a document
 curl -X POST -H "Content-Type: application/json" -d '{"url":"<pdf_url>"}' http://localhost:8000/upload
+```
+![Screenshot from 2024-11-09 16-10-13](https://github.com/user-attachments/assets/72a198cc-03d4-459c-a7a4-19aaab2ea777)
 
+```bash
 # Retrieve information
 curl -X POST -H "Content-Type: application/json" -d '{"document_id": "doc_id", "query": "What is GraphRAG?"}' http://localhost:8000/retrieve
+```
+![Screenshot from 2024-11-09 16-11-21](https://github.com/user-attachments/assets/6aa2d51e-48b5-43e0-b652-a0c4050e0e76)
 
+```bash
 # Get a direct answer
 curl -X POST -H "Content-Type: application/json" -d '{"document_id": "doc_id", "query": "Explain GraphRAG in simple terms."}' http://localhost:8000/answer
 ```
+![Screenshot from 2024-11-09 16-11-49](https://github.com/user-attachments/assets/39c11958-de5c-490b-b046-f6b1149b887b)
+
+Example of irrelevant query : 
+![Screenshot from 2024-11-09 16-12-47](https://github.com/user-attachments/assets/caed4c79-8b5a-4db7-b485-f6dbf9b4b5c7)
+
+
 
 ## Testing and Documentation
 
 1. **Testing with Sample Data**:
    - Use [CBV Institute Level I Course Notes (PDF)](https://cbvinstitute.com/wp-content/uploads/2019/12/Level-I-Course-Notes-ENG.pdf) as test data.
 2. **Swagger API Documentation**:
-   - Access Swagger at `http://localhost:5000/docs` to view interactive documentation and test endpoints directly.
+   - Access Swagger at `http://localhost:8000/docs` to view interactive documentation and test endpoints directly.
+     ![Screenshot from 2024-11-09 16-16-47](https://github.com/user-attachments/assets/255e79f2-f5b3-4971-a3ff-0b74850611f5)
+
 
 ## Security Considerations
 
