@@ -13,10 +13,7 @@ This is my attempt to solve the technical test for Corolair. I have implemented 
 7. [Usage Examples](#usage-examples)
 8. [Testing & Documentation](#testing-and-documentation)
 9. [Security Considerations](#security-considerations)
-   <<<<<<< HEAD
-10. # [Bonus : Agent Workflow ](#security-considerations)
-11. [Bonus : Agent Workflow ](#security-considerations)
-    > > > > > > > 11c1f0a28275f1b2ae3d618812fcd7ba65ebee4d
+10. [Bonus : Agent Workflow ](#security-considerations)
 12. [Notes and Future Enhancements](#Notes-and-Future-Enhancements)
 
 ---
@@ -187,7 +184,6 @@ Example of irrelevant query :
 4. **Fallback to Agent**:
    - If the answer is not relevant or the content is missing in the document, the fallback agent is invoked. This agent will provide alternative sources or generate a new answer based on external knowledge sources.
 
-> > > > > > > 11c1f0a28275f1b2ae3d618812fcd7ba65ebee4d
 
 ### Agent Workflow Diagram:
 
