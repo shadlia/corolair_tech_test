@@ -13,6 +13,8 @@ This is my attempt to solve the technical test for Corolair. I have implemented 
 7. [Usage Examples](#usage-examples)
 8. [Testing & Documentation](#testing-and-documentation)
 9. [Security Considerations](#security-considerations)
+10. [Bonus : Agent Workflow ](#security-considerations)
+11. [Notes and Future Enhancements](#Notes-and-Future-Enhancements)
 
 ---
 
@@ -115,24 +117,25 @@ The API provides knowledge retrieval and answering services by processing and em
 # Upload a document
 curl -X POST -H "Content-Type: application/json" -d '{"url":"<pdf_url>"}' http://localhost:8000/upload
 ```
+
 ![Screenshot from 2024-11-09 16-10-13](https://github.com/user-attachments/assets/72a198cc-03d4-459c-a7a4-19aaab2ea777)
 
 ```bash
 # Retrieve information
 curl -X POST -H "Content-Type: application/json" -d '{"document_id": "doc_id", "query": "What is GraphRAG?"}' http://localhost:8000/retrieve
 ```
+
 ![Screenshot from 2024-11-09 16-11-21](https://github.com/user-attachments/assets/6aa2d51e-48b5-43e0-b652-a0c4050e0e76)
 
 ```bash
 # Get a direct answer
 curl -X POST -H "Content-Type: application/json" -d '{"document_id": "doc_id", "query": "Explain GraphRAG in simple terms."}' http://localhost:8000/answer
 ```
+
 ![Screenshot from 2024-11-09 16-11-49](https://github.com/user-attachments/assets/39c11958-de5c-490b-b046-f6b1149b887b)
 
-Example of irrelevant query : 
+Example of irrelevant query :
 ![Screenshot from 2024-11-09 16-12-47](https://github.com/user-attachments/assets/caed4c79-8b5a-4db7-b485-f6dbf9b4b5c7)
-
-
 
 ## Testing and Documentation
 
@@ -142,7 +145,65 @@ Example of irrelevant query :
    - Access Swagger at `http://localhost:8000/docs` to view interactive documentation and test endpoints directly.
      ![Screenshot from 2024-11-09 16-16-47](https://github.com/user-attachments/assets/255e79f2-f5b3-4971-a3ff-0b74850611f5)
 
-
 ## Security Considerations
 
 - **OpenAI Key Management**: Ensure OpenAI keys are stored securely and not hardcoded in the source.
+
+## Bonus: Agent Workflow
+
+### Workflow for Query Resolution:
+
+1. **Chunk-Based Retrieval**:
+
+   - The first step is to check the relevant chunks for the user query. Using document embeddings and similarity scoring, we retrieve the most relevant chunks from the document.
+
+2. **LLM Response Generation**:
+
+   - Once relevant chunks are retrieved, the system feeds these into an LLM (e.g., OpenAI) to generate a relevant answer.
+
+3. **Answer Relevance Check**:
+
+   - If the generated answer is deemed relevant, it is returned to the user.
+
+4. **Fallback to Agent**:
+   - If the answer is not relevant or the content is missing in the document, the fallback agent is invoked. This agent will provide alternative sources or generate a new answer based on external knowledge sources.
+
+### Agent Workflow Diagram:
+
+```plaintext
+[User Query] --> [Check Chunks for Relevance]
+       |
+       v
+[Relevant Chunks Found?] --- No --> [Invoke Agent for Alternative Answer]
+       |
+       v
+    Yes
+       |
+       v
+[LLM Generates Answer]
+       |
+       v
+[Answer Relevant?] --- No --> [Invoke Agent for Alternative Answer]
+       |
+       v
+    Yes
+       |
+       v
+[Return Answer to User]
+```
+
+This workflow ensures the API can provide accurate answers based on the content of the uploaded documents, while also providing alternative solutions when necessary.
+
+Example if the document doesnt provide an answer :
+1- The agent start :
+![Screenshot from 2024-11-09 17-05-49](https://github.com/user-attachments/assets/bb172533-81e4-43ce-85dd-6a9ee7d1784b)
+2- VOILA we get the answer :
+![Screenshot from 2024-11-09 17-16-38](https://github.com/user-attachments/assets/ad464867-e44d-4d46-95b2-3e64c6623f4a)
+
+## Notes and Future Enhancements
+
+Here are a few improvements i thought about to enhance the system:
+
+- **Improved Similarity Calculation**: Explore advanced methods for calculating similarity between embeddings to better match relevant content or use langchain/llama_index functionalities
+- **Enhanced Knowledge Graph Construction**: Use LanceDB's advanced capabilities for efficient knowledge graph storage and retrieval.
+- **Integration with Docling**: I couldn't use Docling due to packages incompability with Langchain (used it for the agent and as pdf loader)
