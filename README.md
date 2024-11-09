@@ -13,6 +13,8 @@ This is my attempt to solve the technical test for Corolair. I have implemented 
 7. [Usage Examples](#usage-examples)
 8. [Testing & Documentation](#testing-and-documentation)
 9. [Security Considerations](#security-considerations)
+10. [Bonus :  Agent Workflow ](#security-considerations)
+11. [Notes and Future Enhancements](#Notes-and-Future-Enhancements)
 
 ---
 
@@ -146,3 +148,61 @@ Example of irrelevant query :
 ## Security Considerations
 
 - **OpenAI Key Management**: Ensure OpenAI keys are stored securely and not hardcoded in the source.
+
+## Bonus: Agent Workflow
+
+### Workflow for Query Resolution:
+
+1. **Chunk-Based Retrieval**:
+   - The first step is to check the relevant chunks for the user query. Using document embeddings and similarity scoring, we retrieve the most relevant chunks from the document.
+  
+2. **LLM Response Generation**:
+   - Once relevant chunks are retrieved, the system feeds these into an LLM (e.g., OpenAI) to generate a relevant answer.
+  
+3. **Answer Relevance Check**:
+   - If the generated answer is deemed relevant, it is returned to the user.
+  
+4. **Fallback to Agent**:
+   - If the answer is not relevant or the content is missing in the document, the fallback agent is invoked. This agent will provide alternative sources or generate a new answer based on external knowledge sources.
+  
+### Agent Workflow Diagram:
+
+```plaintext
+[User Query] --> [Check Chunks for Relevance]
+       |
+       v
+[Relevant Chunks Found?] --- No --> [Invoke Agent for Alternative Answer]
+       |
+       v
+    Yes
+       |
+       v
+[LLM Generates Answer]
+       |
+       v
+[Answer Relevant?] --- No --> [Invoke Agent for Alternative Answer]
+       |
+       v
+    Yes
+       |
+       v
+[Return Answer to User]
+```
+
+This workflow ensures the API can provide accurate answers based on the content of the uploaded documents, while also providing alternative solutions when necessary.
+
+Example if the document doesnt provide an answer : 
+1- The agent start : 
+![Screenshot from 2024-11-09 17-05-49](https://github.com/user-attachments/assets/bb172533-81e4-43ce-85dd-6a9ee7d1784b)
+2- VOILA we get the answer : 
+![Screenshot from 2024-11-09 17-16-38](https://github.com/user-attachments/assets/ad464867-e44d-4d46-95b2-3e64c6623f4a)
+
+## Notes and Future Enhancements
+
+Here are a few improvements i thought about to enhance the system:
+
+- **Improved Similarity Calculation**: Explore advanced methods for calculating similarity between embeddings to better match relevant content or use langchain/llama_index functionalities
+- **Enhanced Knowledge Graph Construction**: Use LanceDB's advanced capabilities for efficient knowledge graph storage and retrieval.
+- **Integration with Docling**: I couldn't use Docling due to packages incompability with Langchain (used it for the agent and as pdf loader)
+
+
