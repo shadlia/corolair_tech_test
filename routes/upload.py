@@ -1,7 +1,7 @@
 # api/routes/upload.py
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, HttpUrl
-from services.pdf_process import process_pdf
+from services.pdf_process import process_pdf, verify_pdf
 from services.embeddings import create_embeddings, store_embeddings
 from services.graph import build_graph_and_store
 
@@ -26,7 +26,8 @@ class UploadResponse(BaseModel):
 )
 async def upload_pdf(request: UploadRequest):
     try:
-        # Step 1: Verify that the URL is valid - handled by the HttpUrl type in UploadRequest
+        # Step 1: Verify that the URL is valid and PDF
+        verify_pdf(request.url)
 
         # Step 2: Process the PDF and extract text chunks
         document_text = process_pdf(request.url)
