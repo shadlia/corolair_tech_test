@@ -169,21 +169,6 @@ Example of irrelevant query :
 4. **Fallback to Agent**:
    - If the answer is not relevant or the content is missing in the document, the fallback agent is invoked. This agent will provide alternative sources or generate a new answer based on external knowledge sources.
 
-=======
-
-- The first step is to check the relevant chunks for the user query. Using document embeddings and similarity scoring, we retrieve the most relevant chunks from the document.
-
-2. **LLM Response Generation**:
-
-   - Once relevant chunks are retrieved, the system feeds these into an LLM (e.g., OpenAI) to generate a relevant answer.
-
-3. **Answer Relevance Check**:
-
-   - If the generated answer is deemed relevant, it is returned to the user.
-
-4. **Fallback to Agent**:
-   - If the answer is not relevant or the content is missing in the document, the fallback agent is invoked. This agent will provide alternative sources or generate a new answer based on external knowledge sources.
-
 
 ### Agent Workflow Diagram:
 
