@@ -13,8 +13,11 @@ This is my attempt to solve the technical test for Corolair. I have implemented 
 7. [Usage Examples](#usage-examples)
 8. [Testing & Documentation](#testing-and-documentation)
 9. [Security Considerations](#security-considerations)
-10. [Bonus : Agent Workflow ](#security-considerations)
-11. [Notes and Future Enhancements](#Notes-and-Future-Enhancements)
+   <<<<<<< HEAD
+10. # [Bonus : Agent Workflow ](#security-considerations)
+11. [Bonus : Agent Workflow ](#security-considerations)
+    > > > > > > > 11c1f0a28275f1b2ae3d618812fcd7ba65ebee4d
+12. [Notes and Future Enhancements](#Notes-and-Future-Enhancements)
 
 ---
 
@@ -154,6 +157,7 @@ Example of irrelevant query :
 ### Workflow for Query Resolution:
 
 1. **Chunk-Based Retrieval**:
+   <<<<<<< HEAD
 
    - The first step is to check the relevant chunks for the user query. Using document embeddings and similarity scoring, we retrieve the most relevant chunks from the document.
 
@@ -167,6 +171,23 @@ Example of irrelevant query :
 
 4. **Fallback to Agent**:
    - If the answer is not relevant or the content is missing in the document, the fallback agent is invoked. This agent will provide alternative sources or generate a new answer based on external knowledge sources.
+
+=======
+
+- The first step is to check the relevant chunks for the user query. Using document embeddings and similarity scoring, we retrieve the most relevant chunks from the document.
+
+2. **LLM Response Generation**:
+
+   - Once relevant chunks are retrieved, the system feeds these into an LLM (e.g., OpenAI) to generate a relevant answer.
+
+3. **Answer Relevance Check**:
+
+   - If the generated answer is deemed relevant, it is returned to the user.
+
+4. **Fallback to Agent**:
+   - If the answer is not relevant or the content is missing in the document, the fallback agent is invoked. This agent will provide alternative sources or generate a new answer based on external knowledge sources.
+
+> > > > > > > 11c1f0a28275f1b2ae3d618812fcd7ba65ebee4d
 
 ### Agent Workflow Diagram:
 
