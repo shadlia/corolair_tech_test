@@ -66,11 +66,11 @@ The project is organized as follows:
 │   ├── answer.py          # Route for answering queries
 │   ├── retrieve.py        # Route for retrieving content
 │   └── upload.py          # Route for uploading PDFs
-├── services/              # Directory for service logic
-│   ├── answer_generator.py # Service for generating answers
-│   ├── embeddings.py      # Service for handling embeddings
-│   ├── graph.py           # Service for knowledge graph management
-│   └── pdf_processor.py   # Service for processing PDFs
+├── utils/              # Directory for service logic
+│   ├── answer_generator.py # utils for generating answers
+│   ├── embeddings_generator.py      # utils for handling embeddings
+│   ├── gKnowlege_graph.py           # utils for knowledge graph management
+│   └── pdf_processor.py   # utils for processing PDFs
 └── README.md              # Documentation for the API
 ```
 
