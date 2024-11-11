@@ -118,21 +118,21 @@ The API provides knowledge retrieval and answering services by processing and em
 curl -X POST -H "Content-Type: application/json" -d '{"url":"<pdf_url>"}' http://localhost:8000/upload
 ```
 
-![Screenshot from 2024-11-09 16-10-13](https://github.com/user-attachments/assets/72a198cc-03d4-459c-a7a4-19aaab2ea777)
+![Screenshot from 2024-11-11 10-59-12](https://github.com/user-attachments/assets/d7ac86ee-5168-4ebe-92e4-a7d673d8c9f0)
 
 ```bash
 # Retrieve information
-curl -X POST -H "Content-Type: application/json" -d '{"document_id": "doc_id", "query": "What is GraphRAG?"}' http://localhost:8000/retrieve
+curl -X POST -H "Content-Type: application/json" -d '{"document_id": "doc_id", "query": "Wwhat is Quantitative Analysis?"}' http://localhost:8000/retrieve
 ```
 
-![Screenshot from 2024-11-09 16-11-21](https://github.com/user-attachments/assets/6aa2d51e-48b5-43e0-b652-a0c4050e0e76)
+![Screenshot from 2024-11-11 11-00-15](https://github.com/user-attachments/assets/a5866e3d-2b38-4733-ba5a-1ad7344870e9)
 
 ```bash
 # Get a direct answer
-curl -X POST -H "Content-Type: application/json" -d '{"document_id": "doc_id", "query": "Explain GraphRAG in simple terms."}' http://localhost:8000/answer
+curl -X POST -H "Content-Type: application/json" -d '{"document_id": "doc_id", "query": "Wwhat is Quantitative Analysis?"}' http://localhost:8000/answer
 ```
 
-![Screenshot from 2024-11-09 16-11-49](https://github.com/user-attachments/assets/39c11958-de5c-490b-b046-f6b1149b887b)
+![Screenshot from 2024-11-11 11-00-55](https://github.com/user-attachments/assets/5b6a57a0-1c07-4da1-9fc6-4a20b54f3162)
 
 Example of irrelevant query :
 ![Screenshot from 2024-11-09 16-12-47](https://github.com/user-attachments/assets/caed4c79-8b5a-4db7-b485-f6dbf9b4b5c7)
