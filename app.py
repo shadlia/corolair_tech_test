@@ -11,4 +11,7 @@ app.include_router(answer.router, prefix="/answer", tags=["Answer"])
 
 @app.get("/")
 def root():
-    return {"message": "Hi its me Chadlia :) !"}
+    return {
+        "success": True,
+        "data": {"Message": "hello its me Chadlia :) "},
+    }

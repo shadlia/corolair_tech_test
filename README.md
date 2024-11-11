@@ -14,7 +14,7 @@ This is my attempt to solve the technical test for Corolair. I have implemented 
 8. [Testing & Documentation](#testing-and-documentation)
 9. [Security Considerations](#security-considerations)
 10. [Bonus : Agent Workflow ](#security-considerations)
-12. [Notes and Future Enhancements](#Notes-and-Future-Enhancements)
+11. [Notes and Future Enhancements](#Notes-and-Future-Enhancements)
 
 ---
 
@@ -169,7 +169,6 @@ Example of irrelevant query :
 4. **Fallback to Agent**:
    - If the answer is not relevant or the content is missing in the document, the fallback agent is invoked. This agent will provide alternative sources or generate a new answer based on external knowledge sources.
 
-
 ### Agent Workflow Diagram:
 
 ```plaintext
@@ -199,7 +198,7 @@ This workflow ensures the API can provide accurate answers based on the content 
 Example if the document doesnt provide an answer :
 1- The agent start :
 ![Screenshot from 2024-11-09 17-05-49](https://github.com/user-attachments/assets/bb172533-81e4-43ce-85dd-6a9ee7d1784b)
-2- VOILA we get the answer :
+2- VOILA we got the alternative answer :
 ![Screenshot from 2024-11-09 17-16-38](https://github.com/user-attachments/assets/ad464867-e44d-4d46-95b2-3e64c6623f4a)
 
 ## Notes and Future Enhancements
