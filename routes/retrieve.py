@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
-from services.graph import retrieve_relevant_chunks_from_db
+from typing import Dict, Any
+from utils.Knowlege_graph import retrieve_relevant_chunks_from_db
 
 router = APIRouter()
 
@@ -24,8 +25,8 @@ class Chunk(BaseModel):
 
 
 class RetrieveResponse(BaseModel):
-    document_id: str
-    relevant_chunks: list[Chunk]
+    success: bool
+    data: Dict[str, Any]
 
 
 @router.post(
@@ -46,10 +47,13 @@ async def retrieve_relevant_chunks(request: RetrieveRequest):
         relevant_chunks = retrieve_relevant_chunks_from_db(
             request.document_id, request.query
         )
-
-        # Step 2: Return the relevant chunks
-        return {"document_id": request.document_id, "relevant_chunks": relevant_chunks}
+        return {
+            "success": True,
+            "data": {
+                "document_id": request.document_id,
+                "relevant_chunks": relevant_chunks,
+            },
+        }
 
     except Exception as e:
-        # Raise an HTTPException if an error occurs
-        raise HTTPException(status_code=500, detail=str(e))
+        return {"success": False, "error": {"message": str(e)}}

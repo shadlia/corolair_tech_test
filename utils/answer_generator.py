@@ -3,7 +3,7 @@ from openai import OpenAI
 from langchain_openai import OpenAI as langchain_openai
 
 from fastapi import HTTPException
-from services.graph import retrieve_relevant_chunks_from_db
+from utils.Knowlege_graph import retrieve_relevant_chunks_from_db
 from langchain.agents import initialize_agent, AgentType
 from langchain.llms import OpenAI as LangChainOpenAI
 from langchain.prompts import PromptTemplate

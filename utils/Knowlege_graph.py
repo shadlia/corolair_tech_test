@@ -5,7 +5,7 @@ import numpy as np
 from pydantic import BaseModel
 import networkx as nx
 from sklearn.metrics.pairwise import cosine_similarity
-from services.embeddings import get_query_embedding
+from utils.embeddings_generator import get_query_embedding
 from fastapi import HTTPException
 from sklearn.metrics.pairwise import cosine_similarity
 

@@ -1,10 +1,9 @@
-# api/routes/upload.py
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, HttpUrl
-from services.pdf_process import process_pdf, verify_pdf
-from services.embeddings import create_embeddings, store_embeddings
-from services.graph import build_graph_and_store
-
+from utils.pdf_processor import process_pdf, verify_pdf
+from utils.embeddings_generator import create_embeddings, store_embeddings
+from utils.Knowlege_graph import build_graph_and_store
+from typing import Dict, Any, Optional
 from uuid import uuid4
 
 router = APIRouter()
@@ -15,7 +14,8 @@ class UploadRequest(BaseModel):
 
 
 class UploadResponse(BaseModel):
-    document_id: str
+    success: bool
+    data: Optional[Dict[str, Any]] = None
 
 
 @router.post(
@@ -41,11 +41,18 @@ async def upload_pdf(request: UploadRequest):
         # Step 5: Store embeddings in the vector database with the document ID in case we need it later
         store_embeddings(doc_id, chunks)
 
-        # Step 4: Crete and Store the knowledge graph
-        graph = build_graph_and_store(doc_id, chunks)
+        # Step 6: Create and Store the knowledge graph
+        build_graph_and_store(doc_id, chunks)
 
         print("Knowledge Graph Created and stored")
 
-        return {"document_id": doc_id}
+        return {
+            "success": True,
+            "data": {
+                "document_id": doc_id,
+            },
+        }
+
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        # Return a standardized error response with a None `data` field
+        return {"success": False, "data": None, "error": {"message": str(e)}}

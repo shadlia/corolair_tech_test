@@ -3,7 +3,7 @@ from io import BytesIO
 from langchain.document_loaders import PyMuPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from fastapi import HTTPException
-from PyPDF2 import PdfFileReader
+from PyPDF2 import PdfReader
 
 
 def verify_pdf(url: str) -> bool:
@@ -21,10 +21,10 @@ def verify_pdf(url: str) -> bool:
 
         # Step 3: Try reading the PDF content using PyPDF2
         pdf_file = BytesIO(response.content)
-        pdf_reader = PdfFileReader(pdf_file)
+        pdf_reader = PdfReader(pdf_file)
 
         # If no pages are found, it's not a valid PDF
-        if pdf_reader.numPages < 1:
+        if len(pdf_reader.pages) < 1:
             raise ValueError("The PDF file is empty or invalid.")
 
         return True
