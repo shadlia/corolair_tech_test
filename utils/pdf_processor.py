@@ -14,7 +14,7 @@ def verify_pdf(url: str) -> bool:
     try:
         # Step 1: Request the file from the URL
         response = requests.get(url, stream=True)
-
+        print(response)
         # Step 2: Check if the response is a PDF by verifying the content type
         if "pdf" not in response.headers.get("Content-Type", "").lower():
             raise ValueError("The document is not a valid PDF.")

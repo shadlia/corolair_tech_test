@@ -5,6 +5,7 @@ from utils.embeddings_generator import create_embeddings, store_embeddings
 from utils.Knowlege_graph import build_graph_and_store
 from typing import Dict, Any, Optional
 from uuid import uuid4
+import traceback
 
 router = APIRouter()
 
@@ -26,6 +27,7 @@ class UploadResponse(BaseModel):
 )
 async def upload_pdf(request: UploadRequest):
     try:
+
         # Step 1: Verify that the URL is valid and PDF
         verify_pdf(request.url)
 
@@ -45,7 +47,7 @@ async def upload_pdf(request: UploadRequest):
         build_graph_and_store(doc_id, chunks)
 
         print("Knowledge Graph Created and stored")
-
+        print(doc_id)
         return {
             "success": True,
             "data": {
@@ -54,5 +56,13 @@ async def upload_pdf(request: UploadRequest):
         }
 
     except Exception as e:
-        # Return a standardized error response with a None `data` field
-        return {"success": False, "data": None, "error": {"message": str(e)}}
+        print("ERROR:", e)
+        traceback.print_exc()
+        return {
+            "success": False,
+            "data": None,
+            "error": {
+                "message": str(e),
+                "type": type(e).__name__,
+            },
+        }

@@ -92,10 +92,10 @@ def generate_answer(doc_id: str, query: str):
     answer_content = response.choices[0].message.content
 
     # Check if the answer is relevant (e.g., empty or irrelevant content)
-    if "irrelevant" in answer_content.lower() or not answer_content.strip():
-        return {"content": answer_content, "irrelevant": True}
+    if "relevant" in answer_content.lower() or not answer_content.strip():
+        return {"content": answer_content, "relevant": True}
 
-    return {"content": answer_content, "irrelevant": False}
+    return {"content": answer_content, "relevant": False}
 
 
 def agent_start(query: str) -> str:

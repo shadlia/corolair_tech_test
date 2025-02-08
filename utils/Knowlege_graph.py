@@ -54,7 +54,9 @@ def build_graph_and_store(doc_id, chunks):
     # Step 2 : Prepare data for LanceDB
     data = []
     for idx, (text, embedding) in enumerate(chunks):
-        node_id = f"{doc_id}_node_{idx}"
+        timestamp = datetime.now()
+        node_id = f"{doc_id}_node_{idx}_{timestamp}"
+
         timestamp = datetime.now()
         graph.add_node(idx, doc_id=doc_id, text=text, embedding=embedding)
 
@@ -78,6 +80,8 @@ def build_graph_and_store(doc_id, chunks):
     else:
         tbl = db.open_table(table_name)
         tbl.add(data)
+        print("Table after inserting new document:")
+        print(tbl.to_pandas().to_string())  # Ensure it actually exists
 
     # Step 4 : Add edges based on cosine similarity of embeddings
     for i in range(len(chunks)):
@@ -94,68 +98,60 @@ def build_graph_and_store(doc_id, chunks):
     return graph
 
 
+from sklearn.metrics.pairwise import cosine_similarity
+import numpy as np
+
+
 def retrieve_relevant_chunks_from_db(doc_id: str, query: str, top_k: int = 3):
     """
-    Retrieve the most relevant document chunks from the database based on a query embedding.
-
-    This function:
-    - Retrieves all document nodes associated with a given `doc_id` from the LanceDB.
-    - It filters and calculates the cosine similarity between the query embedding and each chunk's embedding.
-    - It then returns the top K chunks with the highest similarity.
-
-    Parameters:
-    doc_id (str): The identifier for the document whose chunks to retrieve.
-    query (str): The query string used to generate the query embedding.
-    top_k (int): The number of top relevant chunks to return (default is 3).
-
-    Returns:
-    list: A list of relevant chunks, each containing a `node_id`, `text`, and `similarity`.
+    Retrieve the most relevant document chunks from the database based on a query embedding,
+    manually calculating the cosine similarity between the query and each chunk.
     """
     try:
         table_name = "document_graph_nodes"
-
-        # Step 1: Open the table
         table = db.open_table(table_name)
 
-        # Step 2: Filter rows based on doc_id
-        all_data = table.to_pandas()  # Load the table into a DataFrame
-        filtered_data = all_data[
-            all_data["payload"].apply(lambda x: x["meta"]["doc_id"] == doc_id)
-        ]
-
-        # Check if any data is returned for the given doc_id
-        if filtered_data.empty:
-            raise HTTPException(
-                status_code=404,
-                detail=f"No chunks found for document ID: {doc_id} or document doesn't exist",
-            )
-
-        # Step 3: Generate embedding for the query
+        # Step 1: Generate embedding for the query
         query_embedding = get_query_embedding(query)
 
-        # Step 4: Calculate cosine similarity between query embedding and each chunk embedding
-        filtered_data["similarity"] = filtered_data["vector"].apply(
-            lambda x: cosine_similarity([query_embedding], [x])[0][0]
+        # Step 2: Retrieve document chunks
+        results = (
+            table.search(query_embedding)
+            .where(f"payload['meta']['doc_id'] = '{doc_id}'")  # Filter by doc_id
+            .limit(top_k * 2)  # Fetch extra results to filter empty content
+            .to_list()
         )
 
-        # Step 5: Sort by similarity and get the top_k results
-        top_results_df = filtered_data.nlargest(top_k, "similarity")
+        # Step 3: Calculate cosine similarity for each result and store it
+        relevant_chunks = []
+        for row in results:
+            content = (
+                row["payload"].get("content", "").strip()
+            )  # Get content if available
+            if content:
+                # Retrieve the embedding for the current chunk
+                chunk_embedding = np.array(row["vector"])
 
-        # Step 6: Format the results and ensure each chunk has valid text
-        relevant_chunks = [
-            {
-                "node_id": row["id"],
-                "text": (
-                    row["payload"]["content"] if "content" in row["payload"] else ""
-                ),
-                "similarity": row["similarity"],
-            }
-            for _, row in top_results_df.iterrows()
-        ]
+                # Calculate cosine similarity
+                similarity = cosine_similarity([query_embedding], [chunk_embedding])[0][
+                    0
+                ]
 
-        # Step 7 : Filter out any chunks where the content is empty
-        relevant_chunks = [chunk for chunk in relevant_chunks if chunk["text"]]
+                relevant_chunks.append(
+                    {
+                        "node_id": row["id"],
+                        "text": content,
+                        "similarity": similarity,  # Store similarity
+                    }
+                )
 
+        # Step 4: Sort the results by similarity in descending order
+        relevant_chunks.sort(key=lambda x: x["similarity"], reverse=True)
+
+        # Limit the number of top_k results
+        relevant_chunks = relevant_chunks[:top_k]
+
+        # Step 5: Handle case if no relevant chunks were found
         if not relevant_chunks:
             raise HTTPException(
                 status_code=404,

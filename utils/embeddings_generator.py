@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 import lancedb
 
 
-db = lancedb.connect("~/.lancedb")
+db = lancedb.connect("~/.lancedb-tabs")
 
 load_dotenv()
 
